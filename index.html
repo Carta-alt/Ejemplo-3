@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaze Studio | Carta Digital</title>
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    :root{
+      --bg:#f5f1ea;
+      --paper:#fcfaf6;
+      --paper2:#efe9df;
+      --ink:#1b1b1b;
+      --muted:#6a6a63;
+      --line:rgba(27,27,27,0.10);
+      --red:#a3432d;
+      --sage:#74836d;
+      --sand:#b79d7d;
+      --shadow:0 16px 40px rgba(0,0,0,.08);
+      --max:1180px;
+    }
+
+    body{
+      font-family: "Times New Roman", Georgia, serif;
+      color:var(--ink);
+      background:
+        linear-gradient(180deg, #faf7f2 0%, #f5f1ea 100%);
+      overflow-x:hidden;
+    }
+
+    .page-line{
+      position:fixed;
+      top:0;
+      bottom:0;
+      width:1px;
+      background:rgba(27,27,27,.08);
+      pointer-events:none;
+    }
+
+    .line-left{left:36px;}
+    .line-right{right:36px;}
+
+    .hero{
+      width:100%;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:42px 20px 24px;
+    }
+
+    .hero-box{
+      min-height:92vh;
+      background:var(--paper);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      overflow:hidden;
+    }
+
+    .hero-left{
+      padding:52px 46px;
+      position:relative;
+      border-right:1px solid var(--line);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+    }
+
+    .stamp{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:78px;
+      height:78px;
+      border:1px solid rgba(163,67,45,.35);
+      color:var(--red);
+      font-size:.9rem;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      margin-bottom:28px;
+    }
+
+    .jp-small{
+      color:var(--muted);
+      letter-spacing:4px;
+      text-transform:uppercase;
+      font-size:.74rem;
+      margin-bottom:16px;
+    }
+
+    h1{
+      font-size:5rem;
+      line-height:.92;
+      letter-spacing:-1.5px;
+      margin-bottom:18px;
+      font-weight:normal;
+    }
+
+    .hero-left p{
+      color:var(--muted);
+      line-height:1.95;
+      font-size:1.05rem;
+      max-width:540px;
+    }
+
+    .hero-meta{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-top:34px;
+    }
+
+    .meta{
+      border-top:1px solid var(--line);
+      padding-top:14px;
+    }
+
+    .meta strong{
+      display:block;
+      font-size:1.4rem;
+      margin-bottom:6px;
+      color:var(--red);
+      font-weight:normal;
+    }
+
+    .meta span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.55;
+    }
+
+    .hero-right{
+      padding:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.01), transparent);
+    }
+
+    .circle{
+      width:360px;
+      height:360px;
+      border-radius:50%;
+      border:1px solid rgba(27,27,27,.10);
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(circle at center, rgba(116,131,109,.06), transparent 55%);
+    }
+
+    .circle::before{
+      content:"";
+      position:absolute;
+      inset:32px;
+      border-radius:50%;
+      border:1px dashed rgba(27,27,27,.12);
+    }
+
+    .brush{
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 40% 42%, rgba(163,67,45,.16), transparent 38%),
+        radial-gradient(circle at 58% 62%, rgba(116,131,109,.14), transparent 34%);
+      position:relative;
+    }
+
+    .brush::before{
+      content:"";
+      position:absolute;
+      width:170px;
+      height:70px;
+      left:24px;
+      top:68px;
+      background:rgba(27,27,27,.06);
+      border-radius:60% 40% 55% 45% / 55% 45% 55% 45%;
+      transform:rotate(-16deg);
+    }
+
+    .brush::after{
+      content:"";
+      position:absolute;
+      width:76px;
+      height:76px;
+      right:18px;
+      top:26px;
+      border-radius:50%;
+      background:rgba(163,67,45,.10);
+    }
+
+    .topnav-wrap{
+      width:100%;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:0 20px;
+    }
+
+    .topnav{
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+      padding:10px 0 26px;
+    }
+
+    .topnav a{
+      text-decoration:none;
+      color:var(--ink);
+      border:1px solid var(--line);
+      padding:11px 16px;
+      background:rgba(255,255,255,.55);
+      transition:.22s ease;
+      font-size:.95rem;
+    }
+
+    .topnav a:hover{
+      background:var(--ink);
+      color:white;
+    }
+
+    .section{
+      width:100%;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:50px 20px 0;
+    }
+
+    .section-head{
+      display:grid;
+      grid-template-columns:.7fr 1.3fr;
+      gap:26px;
+      align-items:end;
+      margin-bottom:26px;
+    }
+
+    .section-head small{
+      display:block;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      color:var(--red);
+      margin-bottom:12px;
+      font-size:.76rem;
+    }
+
+    .section-head h2{
+      font-size:2.7rem;
+      font-weight:normal;
+      line-height:1;
+    }
+
+    .section-head p{
+      color:var(--muted);
+      line-height:1.9;
+      max-width:720px;
+    }
+
+    .category{
+      margin-bottom:34px;
+      scroll-margin-top:90px;
+    }
+
+    .category-title{
+      font-size:1.55rem;
+      margin-bottom:16px;
+      padding-bottom:12px;
+      border-bottom:1px solid var(--line);
+      font-weight:normal;
+    }
+
+    .menu-grid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:16px;
+    }
+
+    .dish{
+      background:var(--paper);
+      border:1px solid var(--line);
+      padding:22px;
+      transition:.22s ease;
+      box-shadow:var(--shadow);
+    }
+
+    .dish:hover{
+      transform:translateY(-3px);
+      border-color:rgba(163,67,45,.24);
+    }
+
+    .dish-top{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      align-items:flex-start;
+      margin-bottom:12px;
+    }
+
+    .dish h3{
+      font-size:1.18rem;
+      font-weight:normal;
+      line-height:1.3;
+    }
+
+    .price{
+      white-space:nowrap;
+      color:var(--red);
+      font-size:1rem;
+    }
+
+    .dish p{
+      color:var(--muted);
+      line-height:1.85;
+      margin-bottom:14px;
+      font-size:.97rem;
+    }
+
+    .notes{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .note{
+      padding:7px 11px;
+      border:1px solid var(--line);
+      color:var(--sage);
+      font-size:.8rem;
+      background:rgba(116,131,109,.05);
+    }
+
+    .footer{
+      width:100%;
+      max-width:var(--max);
+      margin:70px auto 40px;
+      padding:0 20px;
+    }
+
+    .footer-box{
+      background:var(--paper);
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      padding:28px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:18px;
+      align-items:center;
+    }
+
+    .footer-box h3{
+      font-size:2rem;
+      font-weight:normal;
+      margin-bottom:10px;
+    }
+
+    .footer-box p{
+      color:var(--muted);
+      line-height:1.85;
+      max-width:700px;
+    }
+
+    .social{
+      text-decoration:none;
+      color:var(--ink);
+      border:1px solid var(--line);
+      padding:13px 18px;
+      background:#fff;
+      transition:.22s ease;
+    }
+
+    .social:hover{
+      background:var(--ink);
+      color:white;
+    }
+
+    @media (max-width:980px){
+      .hero-box,
+      .section-head,
+      .footer-box,
+      .menu-grid{
+        grid-template-columns:1fr;
+      }
+
+      .hero-left{
+        border-right:none;
+        border-bottom:1px solid var(--line);
+      }
+
+      .hero-meta{
+        grid-template-columns:1fr 1fr 1fr;
+      }
+    }
+
+    @media (max-width:700px){
+      .line-left,.line-right{display:none;}
+      h1{font-size:3.5rem;}
+      .hero-left,.hero-right{padding:28px 22px;}
+      .hero-meta{grid-template-columns:1fr;}
+      .circle{width:260px;height:260px;}
+      .brush{width:170px;height:170px;}
+    }
+  </style>
+</head>
+<body>
+  <span class="page-line line-left"></span>
+  <span class="page-line line-right"></span>
+
+  <section class="hero">
+    <div class="hero-box">
+      <div class="hero-left">
+        <div>
+          <div class="stamp">Kaze</div>
+          <div class="jp-small">Modern minimal menu</div>
+          <h1>Kaze Studio</h1>
+          <p>
+            Una carta digital inspirada en el minimalismo japonés contemporáneo:
+            calma visual, mucho espacio en blanco, equilibrio, ritmo editorial y una
+            sensación de refinamiento silencioso.
+          </p>
+        </div>
+
+        <div class="hero-meta">
+          <div class="meta"><strong>05</strong><span>Entrantes ligeros y precisos</span></div>
+          <div class="meta"><strong>07</strong><span>Principales con técnica y equilibrio</span></div>
+          <div class="meta"><strong>04</strong><span>Postres delicados y limpios</span></div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="circle">
+          <div class="brush"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="topnav-wrap">
+    <nav class="topnav">
+      <a href="#entrantes">Entrantes</a>
+      <a href="#principales">Principales</a>
+      <a href="#postres">Postres</a>
+      <a href="#bebidas">Bebidas</a>
+    </nav>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <small>Colección gastronómica</small>
+        <h2>Silencio visual, detalle absoluto</h2>
+      </div>
+      <p>
+        Este diseño busca transmitir sofisticación desde la contención. Menos ruido,
+        más aire, más orden y una presentación serena que hace que cada plato tenga
+        más presencia.
+      </p>
+    </div>
+
+    <div class="category" id="entrantes">
+      <div class="category-title">Entrantes</div>
+      <div class="menu-grid">
+        <article class="dish">
+          <div class="dish-top"><h3>Sashimi de Brisa</h3><div class="price">11,20€</div></div>
+          <p>Láminas finas de pescado fresco con cítrico suave, brotes y sésamo tostado.</p>
+          <div class="notes"><span class="note">Fresh</span><span class="note">Clean</span></div>
+        </article>
+        <article class="dish">
+          <div class="dish-top"><h3>Tempura Clara</h3><div class="price">8,90€</div></div>
+          <p>Verduras en tempura ligera con salsa tenue de soja y jengibre.</p>
+          <div class="notes"><span class="note">Light</span><span class="note">Crispy</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="category" id="principales">
+      <div class="category-title">Principales</div>
+      <div class="menu-grid">
+        <article class="dish">
+          <div class="dish-top"><h3>Arroz Umami</h3><div class="price">16,40€</div></div>
+          <p>Arroz meloso con setas, fondo intenso y acabado cremoso muy equilibrado.</p>
+          <div class="notes"><span class="note">Elegant</span><span class="note">Comfort</span></div>
+        </article>
+        <article class="dish">
+          <div class="dish-top"><h3>Salmón Kaze</h3><div class="price">18,20€</div></div>
+          <p>Salmón cocinado a baja temperatura con crema de coliflor y aceite verde.</p>
+          <div class="notes"><span class="note">Premium</span><span class="note">Soft</span></div>
+        </article>
+        <article class="dish">
+          <div class="dish-top"><h3>Pollo Miso Suave</h3><div class="price">14,80€</div></div>
+          <p>Pollo glaseado con miso blanco, verduras finas y arroz blanco aromático.</p>
+          <div class="notes"><span class="note">Balanced</span><span class="note">Warm</span></div>
+        </article>
+        <article class="dish">
+          <div class="dish-top"><h3>Fideo de Piedra</h3><div class="price">13,90€</div></div>
+          <p>Fideos salteados con verduras, sésamo y salsa limpia de soja suave.</p>
+          <div class="notes"><span class="note">Noodles</span><span class="note">Minimal</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="category" id="postres">
+      <div class="category-title">Postres</div>
+      <div class="menu-grid">
+        <article class="dish">
+          <div class="dish-top"><h3>Mochi de Té</h3><div class="price">5,80€</div></div>
+          <p>Mochi delicado con interior cremoso y perfil aromático sutil.</p>
+          <div class="notes"><span class="note">Soft</span></div>
+        </article>
+        <article class="dish">
+          <div class="dish-top"><h3>Cheesecake Blanco</h3><div class="price">6,10€</div></div>
+          <p>Tarta de queso muy limpia, cremosa y sin exceso de dulzor.</p>
+          <div class="notes"><span class="note">Delicate</span></div>
+        </article>
+      </div>
+    </div>
+
+    <div class="category" id="bebidas">
+      <div class="category-title">Bebidas</div>
+      <div class="menu-grid">
+        <article class="dish">
+          <div class="dish-top"><h3>Té Frío Verde</h3><div class="price">3,90€</div></div>
+          <p>Infusión fría con notas herbales, limpia y muy refrescante.</p>
+          <div class="notes"><span class="note">Tea</span></div>
+        </article>
+        <article class="dish">
+          <div class="dish-top"><h3>Sake House</h3><div class="price">5,60€</div></div>
+          <p>Sake suave con perfil redondo y elegante.</p>
+          <div class="notes"><span class="note">Signature</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-box">
+      <div>
+        <h3>Kaze Studio</h3>
+        <p>
+          Minimalismo japonés contemporáneo aplicado a una carta digital.
+          Perfecto para conceptos refinados, sobrios y visualmente muy limpios.
+        </p>
+      </div>
+      <a href="#" class="social">@kazestudio</a>
+    </div>
+  </footer>
+</body>
+</html>
